@@ -4,7 +4,9 @@ export default class Home extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { chatId: '1105986013' };
+        // this.state = { chatId: '1105986013' };
+        this.state = { chatId: '' };
+
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,10 +33,11 @@ export default class Home extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <input
                         type="text"
+                        name="chat_id"
                         onChange={this.handleChange}
                         value={this.state.chatId}
                     />
-                    <button>Acessar</button>
+                    <button type="submit" name="openChat">Acessar</button>
                 </form>
             </>
         )

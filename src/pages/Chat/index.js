@@ -3,6 +3,8 @@ import axios from 'axios';
 import socketio from 'socket.io-client';
 import api from '../../services/api';
 
+import './styles.css';
+
 const socket = socketio(`http://localhost:3333`);
 
 function convertTimestamp(timestamp) {
@@ -33,8 +35,9 @@ export default class Chat extends Component {
         console.log(date);
 
         socket.on('userMessage', data => {
+            console.log('Nova mensagem!');
             this.getMessages();
-        });        
+        });               
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -74,32 +77,43 @@ export default class Chat extends Component {
     
     render() {
         return (
-            <>
-                <div>
-                <a href="#" onClick={() => this.props.history.goBack()}>Voltar</a>&nbsp; {this.state.user.first_name} {this.state.user.last_name} (<strong>{this.state.chat_id}</strong>)
-                </div>
-                <br/>
-                <div>
-                    {this.state.chat.map((chat, index) => (
-                        <div key={index}>
-                            {chat.message || chat.text}
-                            <br/>
-                            <div>
-                                {convertTimestamp(chat.date || null)}
-                            </div>
-                            <hr/>
+            <div className="container">
+                <div className="content">
+                    <div className="card">
+                        <div>
+                            <a href="#" className="backButton" onClick={() => this.props.history.goBack()}>Voltar</a>&nbsp; {this.state.user.first_name} {this.state.user.last_name} (<strong>{this.state.chat_id}</strong>)
                         </div>
-                    ))} 
+                        <br/>
+                        <div className="messagesContent">
+                            <div className="messagesList">
+                            {this.state.chat.map((chat, index) => (
+                                <div key={index}>
+                                    {chat.message || chat.text}
+                                    <br/>
+                                    <div>
+                                        {convertTimestamp(chat.date || null)}
+                                    </div>
+                                    <hr/>
+                                </div>
+                            ))} 
+                            </div>
+                        </div>
+                    
+                        <div className="formContent">
+                            <form onSubmit={this.handleSubmit}>
+                                <div className="inputWriteMessage">
+                                    <textarea
+                                        name="messageText"
+                                        onChange={(event) => this.setState({ message_field: event.target.value })}
+                                        value={this.state.message_field}
+                                    ></textarea>
+                                </div>
+                                <button type="submit">Enviar</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-
-                <form onSubmit={this.handleSubmit}>
-                    <textarea   
-                        onChange={(event) => this.setState({ message_field: event.target.value })}
-                        value={this.state.message_field}
-                    ></textarea>
-                    <button type="submit">Enviar</button>
-                </form>
-            </>
+            </div>
         );
     }
 }
